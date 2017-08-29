@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>B2B批发中心</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="email=no,address=no,telephone=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
+    <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="page-category-list" data-page="category">
+<div class="header-title">
+    <em class="back" href="javascript:history.back(-1);"></em>
+    <h2>B2B批发中心</h2>
+</div>
+<main>
+    <div class="search-section">
+        <form action="http://n.chaoshi.megole.com/m/supplier/home" method="get">
+            <div class="search-input">
+                <i class="search-icon"></i>
+                <input type="text" class="search_input" placeholder="请输入商品名称">
+            </div>
+            <a class="search-btn">搜索</a>
+        </form>
+    </div>
+    <div class="category-list">
+        <div class="left-nav">
+            <div class="nav-list">
+                <div class="nav-item cur">
+                    <div class="nav-tit">酒水饮料</div>
+                    <div class="nav-more" name="xz">
+                        <ul>
+                            <li data-id="">引用水</li>
+                            <li data-id="">茶饮料</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-tit">休闲食品</div>
+                    <div class="nav-more">
+                        <ul>
+                            <li data-id="">糖果巧克力</li>
+                            <li data-id="">饼干糕点</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-tit">休闲食品</div>
+                    <div class="nav-more">
+                        <ul>
+                            <li data-id="">糖果巧克力</li>
+                            <li data-id="">饼干糕点</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-list">
+            <div class="goods_div">
+                <div class="product-item">
+                    <a href="">
+                        <div class="img-box">
+                            <img src="images/product-pic1.jpg">
+                        </div>
+                        <h3 class="product-name">笔记本电脑笔记</h3>
+                        <p class="product-spec">台</p>
+                    </a>
+                </div>
+                <div class="product-item">
+                    <a href="">
+                        <div class="img-box">
+                            <img src="images/product-pic2.jpg">
+                        </div>
+                        <h3 class="product-name">乐事薯片-红</h3>
+                        <p class="product-spec">108g/包</p>
+                    </a> 
+                </div>
+            </div>
+            <div class="caseud loadMore" now="16" num="2">
+                上拉加载
+            </div>
+        </div>
+            
+        </div>
+    </div>
+
+    
+</main>
+<nav class="bottom-nav">
+    <ul>
+        <li class="on">
+            <a href="http://n.chaoshi.megole.com/m/supplier/home">
+                <i class="icon icon-pifa"></i>
+                <p>首页</p>
+            </a>
+        </li>
+        <li>
+            <a href="http://n.chaoshi.megole.com/m/supplier/order/list">
+                <i class="icon icon-dingdan"></i>
+
+                <p>账单</p>
+            </a>
+        </li>
+        <li>
+            <a href="http://n.chaoshi.megole.com/m/supplier/transshipment?back=app">
+                <i class="icon icon-likai"></i>
+
+                <p>我的</p>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- js start -->
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/autoFize.js"></script>
+<script src="js/text.js"></script>
+<script src="js/layer.js"></script>
+<script>
+$(function(){
+    var u = navigator.userAgent,
+        isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端     
+    if(isiOS){
+        $(document).on('focus', 'input[type="text"]', function () {
+            $(".page-category-list").addClass('fixfixed');
+        });
+
+        $(document).on('blur', 'input[type="text"]', function () {
+            $(".page-category-list").removeClass('fixfixed');
+        });
+    }
+    //
+            $("body").on('click','.nav-tit',function () {
+               var item = $(this).parents('.nav-item'),
+                   other = item.siblings();
+               $(this).addClass('fenlei_on');
+               item.find('.nav-more').toggle(200);
+               other.find('.nav-tit').removeClass('fenlei_on');
+               other.find('.nav-more').hide();
+                var cat_id = (other.find('.nav-tit').data('id'));
+                $.ajax({
+                    type        : 'POST',
+                    url         : 'http://n.chaoshi.megole.com/m/supplier/goods/list',
+                    data        : 'cat_id='+cat_id,
+                    dataType    : 'json',
+                    success     : function(result){
+                        if(result.status != 200) {
+                            layer.alert(result.message,{
+                                icon: 2,
+                                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                            });
+                        }else{
+                            var html = '';
+                            $('.goods_div').html('');
+                            $.each($.parseJSON(result.data),function(e,item){
+//                                console.log(item);
+                                html += '<div class="product-item">';
+                                html += '<a href="http://n.chaoshi.megole.com/m/supplier/supplier/list?goods_id='+item.id+'">';
+                                html += '<div class="img-box">'
+                                if(item.img_obj) {
+                                    html += '<img src="' + item.img_obj.url + '"></div>';
+                                }else{
+                                    html += '<img src=""></div>'
+                                }
+                                html += '<h3 class="product-name">'+item.name+'</h3>';
+                                html += '<p class="product-spec">'+item.specs+'</p>';
+                                html += '</a>';
+                                html += '</div>';
+                            });
+                            $('.goods_div').append(html);
+                        }
+                    },
+                    error       : function () {
+                        layer.alert('获取商品数据失败',{
+                            icon: 2,
+                            skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                        });
+                    }
+                });
+            });
+
+
+            $('body').on('click','.nav-more li',function(){
+                $(this).addClass('fenlei_on2').siblings().removeClass('fenlei_on2');
+                var cat_id = ($(this).data('id'));
+                $.ajax({
+                    type        : 'POST',
+                    url         : 'http://n.chaoshi.megole.com/m/supplier/goods/list',
+                    data        : 'cat_id='+cat_id,
+                    dataType    : 'json',
+                    success     : function(result){
+                        if(result.status != 200) {
+                            layer.alert(result.message,{
+                                icon: 2,
+                                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                            });
+                        }else{
+                            var html = '';
+                            $('.goods_div').html('');
+                            $.each($.parseJSON(result.data),function(e,item){
+    //                                console.log(item);
+                                html += '<div class="product-item">';
+                                html += '<a href="http://n.chaoshi.megole.com/m/supplier/supplier/list?goods_id='+item.id+'">';
+                                html += '<div class="img-box">'
+                                if(item.img_obj) {
+                                    html += '<img src="' + item.img_obj.url + '"></div>';
+                                }else{
+                                    html += '<img src=""></div>'
+                                }
+                                html += '<h3 class="product-name">'+item.name+'</h3>';
+                                html += '<p class="product-spec">'+item.specs+'</p>';
+                                html += '</a>';
+                                html += '</div>';
+
+                            });
+                            $('.goods_div').append(html);
+                        }
+                    },
+                    error       : function () {
+                        layer.alert('获取商品数据失败',{
+                            icon: 2,
+                            skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                        });
+                    }
+                });
+            });
+
+
+    //记录状态
+    var state=true;
+    //滚动条滚动的时候
+    $(window).scroll(function(){
+        //获取当前加载更多按钮距离顶部的距离
+        var bottomsubmit = $('.caseud').offset().top;
+//        console.log(bottomsubmit);
+        //获取当前页面底部距离顶部的高度距离
+        var nowtop = $(document).scrollTop()+$(window).height();
+//        console.log(nowtop);         
+        //获取当前页数，默认第一页
+        var now = $('.caseud').attr('now');
+        //获取总页数，PHP分页的总页数
+        var num = $('.caseud').attr('num');
+            //当当前页面的高度大于按钮的高度的时候开始触发加载更多数据
+        if(nowtop>bottomsubmit){
+            $('.caseud').show();
+            //如果为真继续执行，这个是用于防止滚动获取过多的数据情况
+            if(state==true){
+                    //执行一次获取数据并停止再进来获取数据
+                state=false;
+                var cat_id = '';
+                if ($('.fenlei_on').data('id')){
+                    cat_id = $('.fenlei_on').data('id');
+                }else if($('.fenlei_on2').data('id')){
+//                    console.log($('.fenlei_on2'));
+                    cat_id = $('.fenlei_on2').data('id');
+                }
+                var key = $('.search_input').val();
+//                var cat_id = $('.fenlei_on').data('id');
+                setTimeout(function(){
+                      //当前页数++
+                    now++;
+                    //记录当前为第二页
+                    $('.caseud').attr('now',now);
+                    $.ajax({
+                        type        : 'POST',
+                        url         : 'http://n.chaoshi.megole.com/m/supplier/goods/list',
+                        data        : 'cat_id='+cat_id+'&page='+now+'&key='+key,
+                        dataType    : 'json',
+                        success     : function(result){
+                            if(result.status != 200) {
+                                layer.alert(result.message,{
+                                    icon: 2,
+                                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                                });
+                            }else{
+                                var html = '';
+//                                $('.goods_div').html('');
+                                $.each($.parseJSON(result.data),function(e,item){
+//                                console.log(item);
+                                    html += '<div class="product-item">';
+                                    html += '<a href="http://n.chaoshi.megole.com/m/supplier/supplier/list?goods_id='+item.id+'">';
+                                    html += '<div class="img-box">'
+                                    if(item.img_obj) {
+                                        html += '<img src="' + item.img_obj.url + '"></div>';
+                                    }else{
+                                        html += '<img src=""></div>'
+                                    }
+                                    html += '<h3 class="product-name">'+item.name+'</h3>';
+                                    html += '<p class="product-spec">'+item.specs+'</p>';
+                                    html += '</a>';
+                                    html += '</div>';
+                                });
+                                $('.goods_div').append(html);
+                                state=true;
+                            }
+                        },
+                        error       : function () {
+                            layer.alert('获取商品数据失败',{
+                                icon: 2,
+                                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                            });
+                        }
+                    });
+                },500);
+            }
+        }
+    });
+
+
+    $('.search-btn').on('click',function(){
+            var key = $('.search_input').val();
+            var cat_id = '';
+            if ($('.fenlei_on').data('id')){
+                cat_id = $('.fenlei_on').data('id');
+            }else if($('.fenlei_on2').data('id')){
+                cat_id = $('.fenlei_on2').data('id');
+            }
+            $.ajax({
+                type        : 'POST',
+                url         : 'http://n.chaoshi.megole.com/m/supplier/goods/list',
+                data        : 'cat_id='+cat_id+'&key='+key,
+                dataType    : 'json',
+                success     : function(result){
+                    if(result.status != 200) {
+                        layer.alert(result.message,{
+                            icon: 2,
+                            skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                        });
+                    }else{
+                        var html = '';
+                        $('.goods_div').html(html);
+                        $.each($.parseJSON(result.data),function(e,item){
+                            html += '<div class="product-item">';
+                            html += '<a href="http://n.chaoshi.megole.com/m/supplier/supplier/list?goods_id='+item.id+'">';
+                            html += '<div class="img-box">'
+                            if(item.img_obj) {
+                                html += '<img src="' + item.img_obj.url + '"></div>';
+                            }else{
+                                html += '<img src=""></div>'
+                            }
+                            html += '<h3 class="product-name">'+item.name+'</h3>';
+                            html += '<p class="product-spec">'+item.specs+'</p>';
+                            html += '</a>';
+                            html += '</div>';
+                        });
+                        console.log(result);
+                        $('.goods_div').append(html);
+                    }
+                },
+                error       : function () {
+                    layer.alert('获取商品数据失败',{
+                        icon: 2,
+                        skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                    });
+                }
+            });
+        })
+})
+
+</script>
+<!-- js end -->
+</body>
+</html>
